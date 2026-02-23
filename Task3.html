@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Loop Customization</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a2e;
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        h1 {
+            color: #00c8ff;
+        }
+
+        button {
+            padding: 12px 25px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn1 { background-color: #00c8ff; color: #000; }
+        .btn2 { background-color: #00e676; color: #000; }
+        .btn3 { background-color: #ff5252; color: #fff; }
+        .btn4 { background-color: #888; color: #fff; }
+
+        .output-box {
+            background-color: #16213e;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px auto;
+            width: 400px;
+            min-height: 80px;
+            font-size: 16px;
+            line-height: 2;
+            color: #ffd700;
+        }
+
+        .label {
+            color: #aaa;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🔁 Loop Customization</h1>
+
+    <button class="btn1" onclick="printOneToTwenty()">1️⃣ Print 1 to 20</button>
+    <button class="btn2" onclick="printEven()">2️⃣ Print Even Numbers</button>
+    <button class="btn3" onclick="printReverse()">3️⃣ Print Reverse (10–1)</button>
+    <button class="btn4" onclick="clearOutput()">🗑️ Clear</button>
+
+    <p class="label" id="outputLabel"></p>
+    <div class="output-box" id="output">Click a button to see output...</div>
+
+<script>
+
+    // Task 1 - Print 1 to 20
+    function printOneToTwenty() {
+        let result = "";
+        for (let i = 1; i <= 20; i++) {
+            result += i + " ";
+        }
+        document.getElementById("output").textContent = result;
+        document.getElementById("outputLabel").textContent = "✅ Numbers from 1 to 20:";
+    }
+
+    // Task 2 - Print Even Numbers
+    function printEven() {
+        let result = "";
+        for (let i = 1; i <= 20; i++) {
+            if (i % 2 === 0) {
+                result += i + " ";
+            }
+        }
+        document.getElementById("output").textContent = result;
+        document.getElementById("outputLabel").textContent = "✅ Even Numbers from 1 to 20:";
+    }
+
+    // Task 3 - Print Reverse 10 to 1
+    function printReverse() {
+        let result = "";
+        for (let i = 10; i >= 1; i--) {
+            result += i + " ";
+        }
+        document.getElementById("output").textContent = result;
+        document.getElementById("outputLabel").textContent = "✅ Reverse Numbers from 10 to 1:";
+    }
+
+    // Clear Output
+    function clearOutput() {
+        document.getElementById("output").textContent = "Click a button to see output...";
+        document.getElementById("outputLabel").textContent = "";
+    }
+
+</script>
+
+</body>
+</html>

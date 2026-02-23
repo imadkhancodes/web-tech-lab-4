@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATM System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .atm-card {
+            background-color: #16213e;
+            border-radius: 20px;
+            padding: 40px;
+            width: 350px;
+            box-shadow: 0 0 30px rgba(0, 200, 255, 0.3);
+            color: white;
+            text-align: center;
+        }
+
+        h2 {
+            color: #00c8ff;
+            margin-bottom: 5px;
+            font-size: 26px;
+        }
+
+        p.subtitle {
+            color: #aaa;
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
+        .balance-box {
+            background-color: #0f3460;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .balance-box p {
+            margin: 0;
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        .balance-box h3 {
+            margin: 8px 0 0;
+            font-size: 32px;
+            color: #00e676;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #00c8ff;
+            background-color: #1a1a2e;
+            color: white;
+            font-size: 16px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        input[type="number"]::placeholder {
+            color: #888;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        .btn-withdraw {
+            background-color: #00c8ff;
+            color: #000;
+        }
+
+        .btn-deposit {
+            background-color: #00e676;
+            color: #000;
+        }
+
+        .btn-reset {
+            background-color: #ff5252;
+            color: #fff;
+        }
+
+        .message {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .message.success {
+            background-color: #1b5e20;
+            color: #00e676;
+        }
+
+        .message.error {
+            background-color: #4e1010;
+            color: #ff5252;
+        }
+
+        .transaction-history {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .transaction-history h4 {
+            color: #00c8ff;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .history-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        .history-list li {
+            font-size: 12px;
+            padding: 5px 0;
+            border-bottom: 1px solid #0f3460;
+            color: #ccc;
+        }
+
+        .history-list li span.credit {
+            color: #00e676;
+            font-weight: bold;
+        }
+
+        .history-list li span.debit {
+            color: #ff5252;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="atm-card">
+    <h2>🏧 ATM System</h2>
+    <p class="subtitle">Secure Banking at Your Fingertips</p>
+
+    <!-- Balance Display -->
+    <div class="balance-box">
+        <p>Available Balance</p>
+        <h3 id="balanceDisplay">Rs. 10,000</h3>
+    </div>
+
+    <!-- Input Field -->
+    <input type="number" id="amountInput" placeholder="Enter amount (Rs.)" min="1" />
+
+    <!-- Buttons -->
+    <button class="btn-withdraw" onclick="withdraw()">💸 Withdraw</button>
+    <button class="btn-deposit" onclick="deposit()">💰 Deposit</button>
+    <button class="btn-reset" onclick="resetAccount()">🔄 Reset Account</button>
+
+    <!-- Message Box -->
+    <div class="message" id="messageBox"></div>
+
+    <!-- Transaction History -->
+    <div class="transaction-history">
+        <h4>📋 Transaction History</h4>
+        <ul class="history-list" id="historyList">
+            <li>No transactions yet.</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    let balance = 10000;
+    let transactions = [];
+
+    function updateBalanceDisplay() {
+        document.getElementById("balanceDisplay").textContent = "Rs. " + balance.toLocaleString();
+    }
+
+    function showMessage(text, type) {
+        const msgBox = document.getElementById("messageBox");
+        msgBox.textContent = text;
+        msgBox.className = "message " + type;
+        msgBox.style.display = "block";
+
+        setTimeout(() => {
+            msgBox.style.display = "none";
+        }, 3000);
+    }
+
+    function addHistory(entry, type) {
+        const list = document.getElementById("historyList");
+
+        // Remove default text
+        if (transactions.length === 0) {
+            list.innerHTML = "";
+        }
+
+        transactions.push(entry);
+
+        const li = document.createElement("li");
+        li.innerHTML = entry + " → Balance: <span class='" + type + "'>Rs. " + balance.toLocaleString() + "</span>";
+        list.prepend(li);
+    }
+
+    function withdraw() {
+        const input = document.getElementById("amountInput");
+        const amount = parseFloat(input.value);
+
+        if (!amount || amount <= 0) {
+            showMessage("❌ Please enter a valid amount!", "error");
+            return;
+        }
+
+        if (amount > balance) {
+            showMessage("❌ Insufficient balance! You cannot withdraw Rs. " + amount.toLocaleString(), "error");
+            return;
+        }
+
+        balance -= amount;
+        updateBalanceDisplay();
+        addHistory("💸 Withdrawn: Rs. " + amount.toLocaleString(), "debit");
+        showMessage("✅ Successfully withdrawn Rs. " + amount.toLocaleString(), "success");
+        input.value = "";
+    }
+
+    function deposit() {
+        const input = document.getElementById("amountInput");
+        const amount = parseFloat(input.value);
+
+        if (!amount || amount <= 0) {
+            showMessage("❌ Please enter a valid amount!", "error");
+            return;
+        }
+
+        balance += amount;
+        updateBalanceDisplay();
+        addHistory("💰 Deposited: Rs. " + amount.toLocaleString(), "credit");
+        showMessage("✅ Successfully deposited Rs. " + amount.toLocaleString(), "success");
+        input.value = "";
+    }
+
+    function resetAccount() {
+        balance = 10000;
+        transactions = [];
+        updateBalanceDisplay();
+        document.getElementById("historyList").innerHTML = "<li>No transactions yet.</li>";
+        document.getElementById("amountInput").value = "";
+        showMessage("🔄 Account has been reset to Rs. 10,000", "success");
+    }
+</script>
+
+</body>
+</html>

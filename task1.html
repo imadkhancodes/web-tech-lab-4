@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product of Two Numbers</title>
+</head>
+<body>
+
+    <h2>Product of Two Numbers</h2>
+    <p>Click the button below to enter two numbers and see their product.</p>
+
+    <button onclick="calculateProduct()">Click Here</button>
+
+    <script>
+        function calculateProduct() {
+            let num1 = parseFloat(prompt("Enter the first number:"));
+            let num2 = parseFloat(prompt("Enter the second number:"));
+
+            if (isNaN(num1) || isNaN(num2)) {
+                alert("Please enter valid numbers!");
+            } else {
+                let product = num1 * num2;
+                alert("The product of " + num1 + " and " + num2 + " is: " + product);
+            }
+        }
+    </script>
+
+</body>
+</html>

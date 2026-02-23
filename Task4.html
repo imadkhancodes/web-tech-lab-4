@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Result Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            background-color: #16213e;
+            border-radius: 20px;
+            padding: 40px;
+            width: 400px;
+            box-shadow: 0 0 30px rgba(0, 200, 255, 0.3);
+            color: white;
+            text-align: center;
+        }
+
+        h2 {
+            color: #00c8ff;
+            margin-bottom: 5px;
+        }
+
+        p.subtitle {
+            color: #aaa;
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #00c8ff;
+            background-color: #1a1a2e;
+            color: white;
+            font-size: 15px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        input[type="number"]::placeholder {
+            color: #555;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: opacity 0.2s;
+        }
+
+        button:hover { opacity: 0.85; }
+
+        .btn-calculate { background-color: #00c8ff; color: #000; }
+        .btn-clear     { background-color: #ff5252; color: #fff; }
+
+        .result-box {
+            background-color: #0f3460;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+            text-align: left;
+        }
+
+        .result-box h3 {
+            color: #00c8ff;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #1a1a2e;
+            font-size: 15px;
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+        }
+
+        .result-row span:last-child {
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .grade-box {
+            text-align: center;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .grade-A { background-color: #1b5e20; color: #00e676; }
+        .grade-B { background-color: #1a3a5c; color: #00c8ff; }
+        .grade-C { background-color: #4a3800; color: #ffd700; }
+        .grade-D { background-color: #4e1010; color: #ff5252; }
+        .grade-F { background-color: #3a0000; color: #ff1744; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>🎓 Student Result Calculator</h2>
+    <p class="subtitle">Enter marks out of 100 for each subject</p>
+
+    <label>📘 Subject 1 - Math</label>
+    <input type="number" id="sub1" placeholder="Enter marks (0-100)" min="0" max="100" />
+
+    <label>📗 Subject 2 - English</label>
+    <input type="number" id="sub2" placeholder="Enter marks (0-100)" min="0" max="100" />
+
+    <label>📙 Subject 3 - Science</label>
+    <input type="number" id="sub3" placeholder="Enter marks (0-100)" min="0" max="100" />
+
+    <button class="btn-calculate" onclick="calculateResult()">📊 Calculate Result</button>
+    <button class="btn-clear"     onclick="clearResult()">🗑️ Clear</button>
+
+    <!-- Result Box -->
+    <div class="result-box" id="resultBox">
+        <h3>📋 Result Card</h3>
+
+        <div class="result-row">
+            <span>Math Marks</span>
+            <span id="r1"></span>
+        </div>
+        <div class="result-row">
+            <span>English Marks</span>
+            <span id="r2"></span>
+        </div>
+        <div class="result-row">
+            <span>Science Marks</span>
+            <span id="r3"></span>
+        </div>
+        <div class="result-row">
+            <span>Total Marks</span>
+            <span id="rTotal"></span>
+        </div>
+        <div class="result-row">
+            <span>Percentage</span>
+            <span id="rPercent"></span>
+        </div>
+
+        <div class="grade-box" id="gradeBox"></div>
+    </div>
+</div>
+
+<script>
+
+    function calculateResult() {
+
+        // Get values
+        let s1 = parseFloat(document.getElementById("sub1").value);
+        let s2 = parseFloat(document.getElementById("sub2").value);
+        let s3 = parseFloat(document.getElementById("sub3").value);
+
+        // Validation
+        if (isNaN(s1) || isNaN(s2) || isNaN(s3)) {
+            alert("❌ Please enter marks for all 3 subjects!");
+            return;
+        }
+
+        if (s1 < 0 || s1 > 100 || s2 < 0 || s2 > 100 || s3 < 0 || s3 > 100) {
+            alert("❌ Marks must be between 0 and 100!");
+            return;
+        }
+
+        // Calculate Total and Percentage
+        let total      = s1 + s2 + s3;
+        let percentage = (total / 300) * 100;
+
+        // Calculate Grade
+        let grade = "";
+        let gradeClass = "";
+
+        if (percentage >= 90) {
+            grade = "🏆 Grade A — Excellent!";
+            gradeClass = "grade-A";
+        } else if (percentage >= 70) {
+            grade = "🥈 Grade B — Good!";
+            gradeClass = "grade-B";
+        } else if (percentage >= 50) {
+            grade = "🥉 Grade C — Average";
+            gradeClass = "grade-C";
+        } else if (percentage >= 40) {
+            grade = "⚠️ Grade D — Poor";
+            gradeClass = "grade-D";
+        } else {
+            grade = "❌ Grade F — Fail";
+            gradeClass = "grade-F";
+        }
+
+        // Display Results
+        document.getElementById("r1").textContent      = s1 + " / 100";
+        document.getElementById("r2").textContent      = s2 + " / 100";
+        document.getElementById("r3").textContent      = s3 + " / 100";
+        document.getElementById("rTotal").textContent  = total + " / 300";
+        document.getElementById("rPercent").textContent = percentage.toFixed(2) + "%";
+
+        let gradeBox = document.getElementById("gradeBox");
+        gradeBox.textContent  = grade;
+        gradeBox.className    = "grade-box " + gradeClass;
+
+        document.getElementById("resultBox").style.display = "block";
+    }
+
+    function clearResult() {
+        document.getElementById("sub1").value = "";
+        document.getElementById("sub2").value = "";
+        document.getElementById("sub3").value = "";
+        document.getElementById("resultBox").style.display = "none";
+    }
+
+</script>
+
+</body>
+</html>
